@@ -20,7 +20,7 @@
 ## Índice ##
 1. [Descrição do desafio](#Descrição-desafio)
 2. [Tecnologias](#Tecnologias)
-3. [Diagramas UML](#Diagramas)
+3. [Diagramas UML](#Diagramas-UML)
 5. [Esquema Banco de Dados](#Esquema-Banco-de-Dados)
 
 ## Descrição do desafio ##

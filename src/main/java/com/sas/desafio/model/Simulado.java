@@ -2,12 +2,14 @@ package com.sas.desafio.model;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Simulado {
@@ -20,6 +22,9 @@ public class Simulado {
 
 	@Column(name = "data_criacao")
 	private LocalDate dataCriacao;
+
+	@ManyToMany(mappedBy = "simulados")
+	private List<Aluno> alunos;
 
 	public Simulado() {
 		super();
