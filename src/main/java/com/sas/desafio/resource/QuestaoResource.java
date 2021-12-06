@@ -22,8 +22,6 @@ public class QuestaoResource {
 	public List<Questao> listar(@RequestParam(required = false) String nivel,
 			@RequestParam(required = false) String area) {
 
-		System.out.println(nivel + area);
-
 		return questaoRepository.findAll();
 	}
 

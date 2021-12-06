@@ -29,7 +29,7 @@ public class GabaritoResource {
 	}
 
 	@GetMapping("/{id}")
-	public Gabarito listaGabarito(@PathVariable Long id) {
+	public Gabarito buscaPorIdProva(@PathVariable Long id) {
 		Prova prova = provaRepository.getById(id);
 
 		return gabaritoService.retornaGabarito(prova);

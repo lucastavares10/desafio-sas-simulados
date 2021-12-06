@@ -18,8 +18,7 @@ public class ProvaResource {
 	private ProvaRepository provaRepository;
 
 	@GetMapping
-	public List<Prova> listart() {
-
+	public List<Prova> listar() {
 		return provaRepository.findAll();
 	}
 
