@@ -1,10 +1,15 @@
 package com.sas.desafio.model;
 
+import java.util.List;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 @Entity
 public class Prova {
@@ -18,15 +23,23 @@ public class Prova {
 
 	private Boolean finalizada;
 
+	@ManyToMany(mappedBy = "provas")
+	private List<Simulado> simulados;
+
+	@ManyToMany
+	@JoinTable(name = "prova_questoes", joinColumns = @JoinColumn(name = "prova_id"), inverseJoinColumns = @JoinColumn(name = "questao_id"))
+	private List<Questao> questoes;
+
 	public Prova() {
 		super();
 	}
 
-	public Prova(Long id, String areaConhecimento, Boolean finalizada) {
+	public Prova(Long id, String areaConhecimento, Boolean finalizada, List<Questao> questoes) {
 		super();
 		this.id = id;
 		this.areaConhecimento = areaConhecimento;
 		this.finalizada = finalizada;
+		this.questoes = questoes;
 	}
 
 	public Long getId() {
@@ -53,9 +66,18 @@ public class Prova {
 		this.finalizada = finalizada;
 	}
 
+	public List<Questao> getQuestoes() {
+		return questoes;
+	}
+
+	public void setQuestoes(List<Questao> questoes) {
+		this.questoes = questoes;
+	}
+
 	@Override
 	public String toString() {
-		return "Prova [id=" + id + ", areaConhecimento=" + areaConhecimento + ", finalizada=" + finalizada + "]";
+		return "Prova [id=" + id + ", areaConhecimento=" + areaConhecimento + ", finalizada=" + finalizada
+				+ ", questoes=" + questoes + "]";
 	}
 
 }

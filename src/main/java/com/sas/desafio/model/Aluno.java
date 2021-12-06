@@ -2,7 +2,9 @@ package com.sas.desafio.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -27,11 +29,12 @@ public class Aluno {
 		super();
 	}
 
-	public Aluno(Long id, String nome, String cpf) {
+	public Aluno(Long id, String nome, String cpf, List<Simulado> simulados) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
+		this.simulados = simulados;
 	}
 
 	public Long getId() {
@@ -58,9 +61,17 @@ public class Aluno {
 		this.cpf = cpf;
 	}
 
+	public List<Simulado> getSimulados() {
+		return simulados;
+	}
+
+	public void setSimulados(List<Simulado> simulados) {
+		this.simulados = simulados;
+	}
+
 	@Override
 	public String toString() {
-		return "Aluno [id=" + id + ", nome=" + nome + ", cpf=" + cpf + "]";
+		return "Aluno [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", simulados=" + simulados + "]";
 	}
 
 }

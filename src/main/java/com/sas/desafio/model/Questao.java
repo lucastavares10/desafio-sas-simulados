@@ -27,16 +27,20 @@ public class Questao {
 	@Column(name = "resposta_correta")
 	private TipoResposta respostaCorreta;
 
+	@Column(name = "area_conhecimento")
+	private String areaConhecimento;
+
 	public Questao() {
 		super();
 	}
 
-	public Questao(Long id, String pergunta, TipoNivel nivel, TipoResposta respostaCorreta) {
+	public Questao(Long id, String pergunta, TipoNivel nivel, TipoResposta respostaCorreta, String areaConhecimento) {
 		super();
 		this.id = id;
 		this.pergunta = pergunta;
 		this.nivel = nivel;
 		this.respostaCorreta = respostaCorreta;
+		this.areaConhecimento = areaConhecimento;
 	}
 
 	public Long getId() {
@@ -71,10 +75,18 @@ public class Questao {
 		this.respostaCorreta = respostaCorreta;
 	}
 
+	public String getAreaConhecimento() {
+		return areaConhecimento;
+	}
+
+	public void setAreaConhecimento(String areaConhecimento) {
+		this.areaConhecimento = areaConhecimento;
+	}
+
 	@Override
 	public String toString() {
 		return "Questao [id=" + id + ", pergunta=" + pergunta + ", nivel=" + nivel + ", respostaCorreta="
-				+ respostaCorreta + "]";
+				+ respostaCorreta + ", areaConhecimento=" + areaConhecimento + "]";
 	}
 
 }

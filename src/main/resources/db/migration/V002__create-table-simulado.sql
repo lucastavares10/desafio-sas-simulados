@@ -2,7 +2,8 @@ CREATE TABLE simulado (
 	id serial PRIMARY KEY,
 	titulo VARCHAR(50) NOT NULL,
 	nota DECIMAL(10, 2),
-	data_criacao DATE
+	data_criacao DATE,
+	status VARCHAR(20) DEFAULT 'A_INICIAR' 
 );
 
 
