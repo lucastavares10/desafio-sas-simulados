@@ -1,4 +1,4 @@
-package com.sas.desafio.util.request;
+package com.sas.desafio.util;
 
 import java.util.List;
 

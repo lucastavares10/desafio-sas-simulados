@@ -35,7 +35,6 @@ public class AlunoResource {
 	}
 
 	@PostMapping
-	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<Aluno> criar(@RequestBody Aluno aluno) {
 		Aluno alunoSalvo = alunoRepository.save(aluno);
 

@@ -16,10 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.DynamicInsert;
+
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sas.desafio.model.tipos.TipoSimuladoStatus;
 
 @Entity
+@DynamicInsert
 @JsonIgnoreProperties({ "hibernateLazyInitializer", "handler" })
 public class Simulado {
 
@@ -53,6 +57,13 @@ public class Simulado {
 		this.titulo = titulo;
 		this.nota = nota;
 		this.status = status;
+		this.dataCriacao = dataCriacao;
+		this.provas = provas;
+	}
+
+	public Simulado(String titulo, LocalDate dataCriacao, List<Prova> provas) {
+		super();
+		this.titulo = titulo;
 		this.dataCriacao = dataCriacao;
 		this.provas = provas;
 	}
