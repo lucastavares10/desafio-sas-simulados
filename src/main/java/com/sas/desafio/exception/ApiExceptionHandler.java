@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.http.converter.HttpMessageNotWritableException;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -60,14 +61,14 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
 	}
 
-//	@Override
-//	protected ResponseEntity<Object> handleHttpMessageNotWritable(HttpMessageNotWritableException ex,
-//			HttpHeaders headers, HttpStatus status, WebRequest request) {
-//
-//		List<Erro> erros = getExceptionMessages(ex.toString(), "recurso.nao-encontrado");
-//
-//		return handleExceptionInternal(ex, erros, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-//	}
+	@Override
+	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+			HttpHeaders headers, HttpStatus status, WebRequest request) {
+
+		List<Erro> erros = getExceptionMessages(ex.getBindingResult().toString(), "recurso.incorreto");
+
+		return handleExceptionInternal(ex, erros, headers, status, request);
+	}
 
 	private List<Erro> getExceptionMessages(String ex, String message) {
 
