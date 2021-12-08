@@ -1,10 +1,8 @@
 package com.sas.desafio.model;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -16,9 +14,9 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
-import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.DynamicInsert;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sas.desafio.model.tipos.TipoSimuladoStatus;
 
@@ -31,7 +29,6 @@ public class Simulado {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	private String titulo;
-	private BigDecimal nota;
 
 	@Enumerated(EnumType.STRING)
 	private TipoSimuladoStatus status;
@@ -40,6 +37,7 @@ public class Simulado {
 	private LocalDate dataCriacao;
 
 	@ManyToMany(mappedBy = "simulados")
+	@JsonBackReference
 	private List<Aluno> alunos;
 
 	@ManyToMany
@@ -50,21 +48,21 @@ public class Simulado {
 		super();
 	}
 
-	public Simulado(Long id, String titulo, BigDecimal nota, TipoSimuladoStatus status, LocalDate dataCriacao,
-			List<Prova> provas) {
-		super();
-		this.id = id;
-		this.titulo = titulo;
-		this.nota = nota;
-		this.status = status;
-		this.dataCriacao = dataCriacao;
-		this.provas = provas;
-	}
-
 	public Simulado(String titulo, LocalDate dataCriacao, List<Prova> provas) {
 		super();
 		this.titulo = titulo;
 		this.dataCriacao = dataCriacao;
+		this.provas = provas;
+	}
+
+	public Simulado(Long id, String titulo, TipoSimuladoStatus status, LocalDate dataCriacao, List<Aluno> alunos,
+			List<Prova> provas) {
+		super();
+		this.id = id;
+		this.titulo = titulo;
+		this.status = status;
+		this.dataCriacao = dataCriacao;
+		this.alunos = alunos;
 		this.provas = provas;
 	}
 
@@ -84,12 +82,12 @@ public class Simulado {
 		this.titulo = titulo;
 	}
 
-	public BigDecimal getNota() {
-		return nota;
+	public TipoSimuladoStatus getStatus() {
+		return status;
 	}
 
-	public void setNota(BigDecimal nota) {
-		this.nota = nota;
+	public void setStatus(TipoSimuladoStatus status) {
+		this.status = status;
 	}
 
 	public LocalDate getDataCriacao() {
@@ -100,12 +98,12 @@ public class Simulado {
 		this.dataCriacao = dataCriacao;
 	}
 
-	public TipoSimuladoStatus getStatus() {
-		return status;
+	public List<Aluno> getAlunos() {
+		return alunos;
 	}
 
-	public void setStatus(TipoSimuladoStatus status) {
-		this.status = status;
+	public void setAlunos(List<Aluno> alunos) {
+		this.alunos = alunos;
 	}
 
 	public List<Prova> getProvas() {
@@ -118,8 +116,8 @@ public class Simulado {
 
 	@Override
 	public String toString() {
-		return "Simulado [id=" + id + ", titulo=" + titulo + ", nota=" + nota + ", status=" + status + ", dataCriacao="
-				+ dataCriacao + ", provas=" + provas + "]";
+		return "Simulado [id=" + id + ", titulo=" + titulo + ", status=" + status + ", dataCriacao=" + dataCriacao
+				+ ", alunos=" + alunos + ", provas=" + provas + "]";
 	}
 
 }

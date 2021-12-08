@@ -1,0 +1,10 @@
+
+ALTER TABLE simulado ADD COLUMN status VARCHAR(20) DEFAULT 'EM_ANDAMENTO';
+
+
+ 
+
+
+
+
+

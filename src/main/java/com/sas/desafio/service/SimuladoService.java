@@ -37,8 +37,11 @@ public class SimuladoService {
 	}
 
 	public void checkSimulados(List<Long> requestIds, List<Prova> provasSalvas) {
-
 		List<Long> notContainsId = new ArrayList<Long>();
+
+		if (requestIds.size() <= 0) {
+			throw new NullPointerException("Por favor, insira os ids das provas que compõem o simulado! ");
+		}
 
 		for (int i = 0; i < requestIds.size(); i++) {
 			Boolean has = false;

@@ -3,6 +3,7 @@ package com.sas.desafio.resource;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -15,9 +16,13 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.sas.desafio.dto.ProximaQuestaoDTO;
 import com.sas.desafio.model.Questao;
+import com.sas.desafio.model.RespostaAluno;
 import com.sas.desafio.model.tipos.TipoNivel;
 import com.sas.desafio.repository.QuestaoRepository;
+import com.sas.desafio.repository.RespostaAlunoRepository;
+import com.sas.desafio.service.QuestaoService;
 
 @RestController
 @RequestMapping("/questoes")
@@ -25,6 +30,12 @@ public class QuestaoResource {
 
 	@Autowired
 	private QuestaoRepository questaoRepository;
+
+	@Autowired
+	private QuestaoService questaoService;
+
+	@Autowired
+	private RespostaAlunoRepository respostaAlunoRepository;
 
 	@GetMapping
 	public List<Questao> listar(@RequestParam(required = false) String nivel,
@@ -52,8 +63,25 @@ public class QuestaoResource {
 	@DeleteMapping("/{id}")
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deletar(@PathVariable Long id) {
-
 		questaoRepository.deleteById(id);
+	}
+
+	@GetMapping("/proxima/{alunoId}")
+	public ResponseEntity<Object> buscaProximaQuestao(@PathVariable Long alunoId) {
+		ProximaQuestaoDTO proximaQuestao = questaoService.proximaQuestao(alunoId);
+
+		return ResponseEntity.status(HttpStatus.OK).body(proximaQuestao);
+	}
+
+	@PostMapping("/responder")
+	@ResponseStatus(code = HttpStatus.OK)
+	public void responderQuestao(@RequestBody RespostaAluno respostaAluno) {
+		List<RespostaAluno> ra = respostaAlunoRepository.findAlreadyExist(respostaAluno.getAlunoId(),
+				respostaAluno.getSimuladoId(), respostaAluno.getProvaId(), respostaAluno.getQuestaoId());
+
+		respostaAlunoRepository.deleteAll(ra);
+
+		respostaAlunoRepository.save(respostaAluno);
 	}
 
 }

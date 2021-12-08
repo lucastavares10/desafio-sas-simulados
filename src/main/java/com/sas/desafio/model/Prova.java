@@ -24,8 +24,6 @@ public class Prova {
 	@Column(name = "area_conhecimento")
 	private String areaConhecimento;
 
-	private Boolean finalizada;
-
 	@ManyToMany(mappedBy = "provas")
 	private List<Simulado> simulados;
 
@@ -37,11 +35,10 @@ public class Prova {
 		super();
 	}
 
-	public Prova(Long id, String areaConhecimento, Boolean finalizada, List<Questao> questoes) {
+	public Prova(Long id, String areaConhecimento, List<Questao> questoes) {
 		super();
 		this.id = id;
 		this.areaConhecimento = areaConhecimento;
-		this.finalizada = finalizada;
 		this.questoes = questoes;
 	}
 
@@ -61,14 +58,6 @@ public class Prova {
 		this.areaConhecimento = areaConhecimento;
 	}
 
-	public Boolean getFinalizada() {
-		return finalizada;
-	}
-
-	public void setFinalizada(Boolean finalizada) {
-		this.finalizada = finalizada;
-	}
-
 	public List<Questao> getQuestoes() {
 		return questoes;
 	}
@@ -79,8 +68,7 @@ public class Prova {
 
 	@Override
 	public String toString() {
-		return "Prova [id=" + id + ", areaConhecimento=" + areaConhecimento + ", finalizada=" + finalizada
-				+ ", questoes=" + questoes + "]";
+		return "Prova [id=" + id + ", areaConhecimento=" + areaConhecimento + ", questoes=" + questoes + "]";
 	}
 
 }

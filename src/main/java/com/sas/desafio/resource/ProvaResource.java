@@ -29,6 +29,7 @@ public class ProvaResource {
 
 	@GetMapping("/{id}")
 	public Prova buscaPorId(@PathVariable Long id) {
+		
 		return provaRepository.getById(id);
 	}
 
