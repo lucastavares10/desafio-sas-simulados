@@ -90,7 +90,7 @@ public class SimuladoService {
 		List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllBySimulado(simuladoSalvo.getId());
 		List<Nota> notasAlunos = new ArrayList<Nota>();
 
-		//checkSimuladoStatus(simuladoSalvo);
+		checkSimuladoStatus(simuladoSalvo);
 
 		for (Aluno aluno : simuladoSalvo.getAlunos()) {
 			BigDecimal somaProvas = new BigDecimal(0);

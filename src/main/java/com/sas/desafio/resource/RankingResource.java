@@ -6,6 +6,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -20,10 +21,10 @@ public class RankingResource {
 	@Autowired
 	private NotaRepository notaRepository;
 
-	@GetMapping
-	public List<RankingDTO> lista() {
+	@GetMapping("/{simuladoId}")
+	public List<RankingDTO> lista(@PathVariable Long simuladoId) {
 		List<RankingDTO> ranking = new ArrayList<RankingDTO>();
-		List<Nota> notas = notaRepository.findAllRankings(PageRequest.of(0, 5));
+		List<Nota> notas = notaRepository.findAllRankings(simuladoId, PageRequest.of(0, 5));
 
 		for (int i = 0; i < notas.size(); i++) {
 			Integer position = 1 + i;
