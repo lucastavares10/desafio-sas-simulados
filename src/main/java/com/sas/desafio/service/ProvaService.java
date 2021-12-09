@@ -5,7 +5,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.sas.desafio.model.Prova;
 import com.sas.desafio.model.Questao;
@@ -42,7 +44,9 @@ public class ProvaService {
 		List<Long> notContainsId = new ArrayList<Long>();
 
 		if (requestIds.size() <= 0) {
-			throw new NullPointerException("Por favor, insira os ids das questões que compõem a prova! ");
+
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Por favor, insira os ids das questões que compõem a prova!");
 		}
 
 		for (int i = 0; i < requestIds.size(); i++) {
@@ -91,8 +95,9 @@ public class ProvaService {
 
 		if (countFacil != 3 || countMedia != 4 || countDificil != 3) {
 
-			throw new EmptyResultDataAccessException(
-					"Uma prova deve conter 3 questões fáceis, 4 medianas e 3 difíceis, verifique novamente!", 1);
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Uma prova deve conter 3 questões fáceis, 4 medianas e 3 difíceis, verifique novamente!");
+
 		}
 
 	}
