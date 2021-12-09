@@ -2,16 +2,22 @@ package com.sas.desafio.service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.sas.desafio.model.Aluno;
 import com.sas.desafio.model.Prova;
+import com.sas.desafio.model.RespostaAluno;
 import com.sas.desafio.model.Simulado;
+import com.sas.desafio.model.tipos.TipoSimuladoStatus;
+import com.sas.desafio.repository.AlunoRepository;
 import com.sas.desafio.repository.ProvaRepository;
+import com.sas.desafio.repository.RespostaAlunoRepository;
 import com.sas.desafio.repository.SimuladoRepository;
 import com.sas.desafio.util.SimuladoRequest;
 
@@ -24,6 +30,12 @@ public class SimuladoService {
 	@Autowired
 	private SimuladoRepository simuladoRepository;
 
+	@Autowired
+	private AlunoRepository alunoRepository;
+
+	@Autowired
+	RespostaAlunoRepository respostaAlunoRepository;
+
 	public Simulado criarSimulado(SimuladoRequest simuladoRequest) {
 		List<Prova> provasSalvas = provaRepository.findAllById(simuladoRequest.getProvasId());
 
@@ -34,6 +46,59 @@ public class SimuladoService {
 		simuladoRepository.save(novoSimulado);
 
 		return novoSimulado;
+	}
+
+	public void inscreveAluno(Long simuladoId, Long alunoId) {
+		Simulado simuladoSalvo = simuladoRepository.getById(simuladoId);
+		Aluno alunoSalvo = alunoRepository.getById(alunoId);
+
+		checkSimuladoStatus(simuladoSalvo);
+
+		Boolean hasIncricao = false;
+
+		for (Aluno aluno : simuladoSalvo.getAlunos()) {
+			if (aluno.getId() == alunoSalvo.getId()) {
+				hasIncricao = true;
+			}
+		}
+
+		if (!hasIncricao) {
+			simuladoSalvo.addAlunos(alunoSalvo);
+			simuladoRepository.save(simuladoSalvo);
+		} else {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Aluno já inscrito no simulado informado!");
+		}
+
+	}
+
+	public void encerraSimulado(Long id) {
+		Simulado simuladoSalvo = simuladoRepository.getById(id);
+
+		// checkSimuladoStatus(simuladoSalvo);
+
+		for (Aluno aluno : simuladoSalvo.getAlunos()) {
+			List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllByAlunoAndSimulado(aluno.getId(), simuladoSalvo.getId());
+			
+			for (RespostaAluno respostaAluno : listaRespostas) {
+				System.out.println(respostaAluno);
+			}
+
+			
+
+		}
+
+		simuladoSalvo.setStatus(TipoSimuladoStatus.CONCLUIDO);
+		simuladoRepository.save(simuladoSalvo);
+
+	}
+
+	public void checkSimuladoStatus(Simulado simulado) {
+
+		if (simulado.getStatus() != TipoSimuladoStatus.EM_ANDAMENTO) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Simulado não disponível! Status: " + simulado.getStatus());
+		}
+
 	}
 
 	public void checkSimulados(List<Long> requestIds, List<Prova> provasSalvas) {

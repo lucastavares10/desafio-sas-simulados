@@ -3,20 +3,20 @@ package com.sas.desafio.resource;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.sas.desafio.model.Questao;
 import com.sas.desafio.model.Simulado;
+import com.sas.desafio.repository.AlunoRepository;
 import com.sas.desafio.repository.SimuladoRepository;
 import com.sas.desafio.service.SimuladoService;
 import com.sas.desafio.util.SimuladoRequest;
@@ -30,6 +30,9 @@ public class SimuladoResource {
 
 	@Autowired
 	private SimuladoService simuladoService;
+
+	@Autowired
+	private AlunoRepository alunoRepository;
 
 	@GetMapping
 	public List<Simulado> listar() {
@@ -55,7 +58,16 @@ public class SimuladoResource {
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public void deletar(@PathVariable Long id) {
 
-		simuladoRepository.deleteById(id);
+		simuladoService.encerraSimulado(id);
+
+	}
+
+	@PutMapping("/{simuladoId}/inscricao/{alunoId}")
+	@ResponseStatus(code = HttpStatus.OK)
+	public void inscricaoAluno(@PathVariable Long simuladoId, @PathVariable Long alunoId) {
+
+		simuladoService.inscreveAluno(simuladoId, alunoId);
+
 	}
 
 }

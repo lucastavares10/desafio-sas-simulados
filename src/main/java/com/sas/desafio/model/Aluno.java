@@ -6,8 +6,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -23,20 +21,23 @@ public class Aluno {
 	private String nome;
 	private String cpf;
 
-	@ManyToMany
-	@JoinTable(name = "aluno_simulado", joinColumns = @JoinColumn(name = "aluno_id"), inverseJoinColumns = @JoinColumn(name = "simulado_id"))
+//	@ManyToMany
+//	@JoinTable(name = "aluno_simulado", joinColumns = @JoinColumn(name = "aluno_id"), inverseJoinColumns = @JoinColumn(name = "simulado_id"))
+//	private List<Simulado> simulados;
+
+	@ManyToMany(mappedBy = "alunos")
+	@JsonBackReference
 	private List<Simulado> simulados;
 
 	public Aluno() {
 		super();
 	}
 
-	public Aluno(Long id, String nome, String cpf, List<Simulado> simulados) {
+	public Aluno(Long id, String nome, String cpf) {
 		super();
 		this.id = id;
 		this.nome = nome;
 		this.cpf = cpf;
-		this.simulados = simulados;
 	}
 
 	public Long getId() {
@@ -63,17 +64,9 @@ public class Aluno {
 		this.cpf = cpf;
 	}
 
-	public List<Simulado> getSimulados() {
-		return simulados;
-	}
-
-	public void setSimulados(List<Simulado> simulados) {
-		this.simulados = simulados;
-	}
-
 	@Override
 	public String toString() {
-		return "Aluno [id=" + id + ", nome=" + nome + ", cpf=" + cpf + ", simulados=" + simulados + "]";
+		return "Aluno [id=" + id + ", nome=" + nome + ", cpf=" + cpf + "]";
 	}
 
 }

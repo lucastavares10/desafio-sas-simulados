@@ -16,7 +16,6 @@ import javax.persistence.ManyToMany;
 
 import org.hibernate.annotations.DynamicInsert;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.sas.desafio.model.tipos.TipoSimuladoStatus;
 
@@ -36,8 +35,12 @@ public class Simulado {
 	@Column(name = "data_criacao")
 	private LocalDate dataCriacao;
 
-	@ManyToMany(mappedBy = "simulados")
-	@JsonBackReference
+//	@ManyToMany(mappedBy = "simulados")
+//	@JsonBackReference
+//	private List<Aluno> alunos;
+
+	@ManyToMany
+	@JoinTable(name = "aluno_simulado", joinColumns = @JoinColumn(name = "simulado_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
 	private List<Aluno> alunos;
 
 	@ManyToMany
@@ -103,6 +106,15 @@ public class Simulado {
 	}
 
 	public void setAlunos(List<Aluno> alunos) {
+		this.alunos = alunos;
+	}
+
+	public void addAlunos(Aluno newAluno) {
+
+		List<Aluno> alunos = this.alunos;
+
+		alunos.add(newAluno);
+
 		this.alunos = alunos;
 	}
 
