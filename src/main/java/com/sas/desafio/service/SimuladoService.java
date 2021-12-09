@@ -1,5 +1,6 @@
 package com.sas.desafio.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -11,11 +12,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.sas.desafio.model.Aluno;
+import com.sas.desafio.model.Gabarito;
+import com.sas.desafio.model.Nota;
 import com.sas.desafio.model.Prova;
+import com.sas.desafio.model.Questao;
 import com.sas.desafio.model.RespostaAluno;
 import com.sas.desafio.model.Simulado;
 import com.sas.desafio.model.tipos.TipoSimuladoStatus;
 import com.sas.desafio.repository.AlunoRepository;
+import com.sas.desafio.repository.NotaRepository;
 import com.sas.desafio.repository.ProvaRepository;
 import com.sas.desafio.repository.RespostaAlunoRepository;
 import com.sas.desafio.repository.SimuladoRepository;
@@ -32,6 +37,9 @@ public class SimuladoService {
 
 	@Autowired
 	private AlunoRepository alunoRepository;
+
+	@Autowired
+	private NotaRepository notaRepository;
 
 	@Autowired
 	RespostaAlunoRepository respostaAlunoRepository;
@@ -71,25 +79,71 @@ public class SimuladoService {
 
 	}
 
+	public BigDecimal calculaNota(List<RespostaAluno> respostas, Gabarito gabarito) {
+		BigDecimal nota = new BigDecimal(0);
+
+		return nota;
+	}
+
 	public void encerraSimulado(Long id) {
 		Simulado simuladoSalvo = simuladoRepository.getById(id);
+		List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllBySimulado(simuladoSalvo.getId());
+		List<Nota> notasAlunos = new ArrayList<Nota>();
 
-		// checkSimuladoStatus(simuladoSalvo);
+		//checkSimuladoStatus(simuladoSalvo);
 
 		for (Aluno aluno : simuladoSalvo.getAlunos()) {
-			List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllByAlunoAndSimulado(aluno.getId(), simuladoSalvo.getId());
-			
-			for (RespostaAluno respostaAluno : listaRespostas) {
-				System.out.println(respostaAluno);
+			BigDecimal somaProvas = new BigDecimal(0);
+			Nota notaAluno = new Nota();
+
+			for (Prova prova : simuladoSalvo.getProvas()) {
+				Integer countQf = 0;
+				Integer countQm = 0;
+				Integer countQd = 0;
+
+				for (Questao questao : prova.getQuestoes()) {
+					for (RespostaAluno resposta : listaRespostas) {
+
+						if (aluno.getId() == resposta.getAlunoId() && prova.getId() == resposta.getProvaId()
+								&& questao.getId() == resposta.getQuestaoId()
+								&& questao.getRespostaCorreta() == resposta.getResposta()) {
+
+							switch (questao.getNivel()) {
+							case FACIL:
+								countQf++;
+								break;
+							case MEDIA:
+								countQm++;
+								break;
+							case DIFICIL:
+								countQd++;
+								break;
+							default:
+								break;
+							}
+
+						}
+
+					}
+
+				}
+
+				somaProvas = somaProvas.add(new BigDecimal((countQf * 15) + (countQm * 12) + (countQd * 8) + 600));
+
 			}
 
-			
+			notaAluno.setNota(somaProvas.divide(new BigDecimal(2)));
+			notaAluno.setAluno(aluno);
+			notaAluno.setSimuladoId(simuladoSalvo.getId());
+
+			notasAlunos.add(notaAluno);
 
 		}
 
+		notaRepository.saveAll(notasAlunos);
+
 		simuladoSalvo.setStatus(TipoSimuladoStatus.CONCLUIDO);
 		simuladoRepository.save(simuladoSalvo);
-
 	}
 
 	public void checkSimuladoStatus(Simulado simulado) {

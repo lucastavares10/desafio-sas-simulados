@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.sas.desafio.model.Simulado;
-import com.sas.desafio.repository.AlunoRepository;
 import com.sas.desafio.repository.SimuladoRepository;
 import com.sas.desafio.service.SimuladoService;
 import com.sas.desafio.util.SimuladoRequest;
@@ -30,9 +29,6 @@ public class SimuladoResource {
 
 	@Autowired
 	private SimuladoService simuladoService;
-
-	@Autowired
-	private AlunoRepository alunoRepository;
 
 	@GetMapping
 	public List<Simulado> listar() {
@@ -59,7 +55,6 @@ public class SimuladoResource {
 	public void deletar(@PathVariable Long id) {
 
 		simuladoService.encerraSimulado(id);
-
 	}
 
 	@PutMapping("/{simuladoId}/inscricao/{alunoId}")
@@ -67,7 +62,6 @@ public class SimuladoResource {
 	public void inscricaoAluno(@PathVariable Long simuladoId, @PathVariable Long alunoId) {
 
 		simuladoService.inscreveAluno(simuladoId, alunoId);
-
 	}
 
 }

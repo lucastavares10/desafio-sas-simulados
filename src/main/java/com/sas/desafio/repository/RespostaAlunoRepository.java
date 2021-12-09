@@ -17,5 +17,8 @@ public interface RespostaAlunoRepository extends JpaRepository<RespostaAluno, Lo
 
 	@Query("SELECT ra FROM RespostaAluno ra WHERE aluno_id = ?1 AND simulado_id = ?2 ORDER BY ra.simuladoId, ra.provaId, ra.questaoId")
 	List<RespostaAluno> findAllByAlunoAndSimulado(Long alunoId, Long simuladoId);
+	
+	@Query("SELECT ra FROM RespostaAluno ra WHERE simulado_id = ?1 ORDER BY ra.alunoId, ra.provaId, ra.questaoId")
+	List<RespostaAluno> findAllBySimulado(Long simuladoId);
 
 }

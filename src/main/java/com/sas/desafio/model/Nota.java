@@ -7,6 +7,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 
 @Entity
 public class Nota {
@@ -18,13 +20,23 @@ public class Nota {
 	@Column(name = "simulado_id")
 	private Long simuladoId;
 
-	@Column(name = "aluno_id")
-	private Long alunoId;
+	@OneToOne
+	@JoinColumn(name = "aluno_id", referencedColumnName = "id")
+	private Aluno aluno;
 
 	private BigDecimal nota;
 
 	public Nota() {
 		super();
+		this.nota = new BigDecimal("0");
+	}
+
+	public Nota(Long id, Long simuladoId, Aluno aluno, BigDecimal nota) {
+		super();
+		this.id = id;
+		this.simuladoId = simuladoId;
+		this.aluno = aluno;
+		this.nota = nota;
 	}
 
 	public Long getId() {
@@ -43,12 +55,12 @@ public class Nota {
 		this.simuladoId = simuladoId;
 	}
 
-	public Long getAlunoId() {
-		return alunoId;
+	public Aluno getAluno() {
+		return aluno;
 	}
 
-	public void setAlunoId(Long alunoId) {
-		this.alunoId = alunoId;
+	public void setAluno(Aluno aluno) {
+		this.aluno = aluno;
 	}
 
 	public BigDecimal getNota() {
@@ -61,7 +73,7 @@ public class Nota {
 
 	@Override
 	public String toString() {
-		return "NotaAluno [id=" + id + ", simuladoId=" + simuladoId + ", alunoId=" + alunoId + ", nota=" + nota + "]";
+		return "Nota [id=" + id + ", simuladoId=" + simuladoId + ", aluno=" + aluno + ", nota=" + nota + "]";
 	}
 
 }

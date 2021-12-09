@@ -110,9 +110,7 @@ public class Simulado {
 	}
 
 	public void addAlunos(Aluno newAluno) {
-
 		List<Aluno> alunos = this.alunos;
-
 		alunos.add(newAluno);
 
 		this.alunos = alunos;
