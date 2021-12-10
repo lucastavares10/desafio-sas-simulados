@@ -178,7 +178,7 @@ public class SimuladoService {
 
 			}
 
-			notaAluno.setNota(somaProvas.divide(new BigDecimal(2)));
+			notaAluno.setNota(somaProvas.divide(new BigDecimal(simuladoSalvo.getProvas().size())));
 			notaAluno.setAluno(aluno);
 			notaAluno.setSimuladoId(simuladoSalvo.getId());
 
