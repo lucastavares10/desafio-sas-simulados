@@ -15,13 +15,20 @@
     <a alt="Flyway">
         <img src="https://img.shields.io/badge/Flyway-v8.0.4-brown.svg">
     </a>
+    <a alt="Swagger-UI">
+        <img src="https://img.shields.io/badge/SwaggerUI-v2.9.2-green.svg">
+    </a>    
 </p>
 
 ## Índice ##
 1. [Descrição do desafio](#Descrição-desafio)
 2. [Tecnologias](#Tecnologias)
 3. [Diagramas UML](#Diagramas-UML)
-5. [Esquema Banco de Dados](#Esquema-Banco-de-Dados)
+4. [Esquema Banco de Dados](#Esquema-Banco-de-Dados)
+5. [Requisitos](#Requisitos)
+6. [Instruções de uso](#Instruções-de-uso)
+7. [Documentação REST](#Documentação-REST)
+
 
 ## Descrição do desafio ##
 
@@ -91,7 +98,18 @@ Gostaríamos que fossem implementados os seguintes endpoints:
 * Uso de migrations para criação do banco de dados
 * Hospedagem em alguma nuvem pública
 
-## Diagramas UML ##
+
+
+## Tecnologias ##
+Following libraries were used during the development of this starter kit :
+
+- **Maven** - Software de gerenciamento de projetos
+- **Spring Boot** - Framework de aplicações Java
+- **PostgreSQL** - Banco de dados SQL
+- **Flyway** - Framework de migrations 
+- **Docker** - Framework de conteinerização
+- **Swagger** - Documentação de API
+
 
 ### Diagrama de Caso de Uso ###
 
@@ -107,14 +125,35 @@ Gostaríamos que fossem implementados os seguintes endpoints:
 <img src="./docs/images/DesafioEntidadeRelacionamento.drawio.png" alt="db_esquema"></a>
 
   
-## Tecnologias ##
-Following libraries were used during the development of this starter kit :
 
-- **Spring Boot** - Framework de aplicações Java
-- **PostgreSQL** - Banco de dados SQL
-- **Flyway** - Framework de migrations 
-- **Docker** - Framework de conteinerização
-- **Swagger** - Documentação de API
+## Instruções de uso ##
+
+**1. Clonar repositório**
+
+**2. Criar banco de dados PostgreSQL**
+```bash
+CREATE DATABASE desafiosas;
+```
+
+**3. Configurar username e password do postgres no properties**
+
++ Caminho: `src/main/resources/application.properties`
+
+**4. Build e start usando maven**
+
+```bash
+./mvnw clean && ./mvnw package
+java -jar target/desafio-0.0.1-SNAPSHOT.jar
+```
+
+Aplicação estará disponível em <http://localhost:8080>.
+
+## Documentação REST ##
+
+Os recursos REST da api estão documentados com Swagger, disponíveis uma vez que o projeto esteja rodando: [http://localhost:8080/swagger-ui.html](http://localhost:8080/swagger-ui.html)
+
+<img src="./docs/images/swagger-ui.png" alt="swagger-ui"></a>
+  
 
 ## Contribuidores ##
 [Lucas Tavares](https://www.linkedin.com/in/lucas-tavares-a25323116/)
