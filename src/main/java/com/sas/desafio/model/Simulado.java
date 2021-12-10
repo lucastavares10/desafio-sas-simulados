@@ -35,10 +35,6 @@ public class Simulado {
 	@Column(name = "data_criacao")
 	private LocalDate dataCriacao;
 
-//	@ManyToMany(mappedBy = "simulados")
-//	@JsonBackReference
-//	private List<Aluno> alunos;
-
 	@ManyToMany
 	@JoinTable(name = "aluno_simulado", joinColumns = @JoinColumn(name = "simulado_id"), inverseJoinColumns = @JoinColumn(name = "aluno_id"))
 	private List<Aluno> alunos;

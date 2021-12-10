@@ -47,9 +47,9 @@ public class GabaritoService {
 
 		for (int i = 0; i < questoes.size(); i++) {
 			Map<Integer, TipoResposta> novaResposta = new HashMap<>();
-
+			
 			novaResposta.put(i + 1, questoes.get(i).getRespostaCorreta());
-
+			
 			respostasMap.add(novaResposta);
 		}
 

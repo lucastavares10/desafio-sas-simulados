@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,7 +19,6 @@ import com.sas.desafio.model.Questao;
 import com.sas.desafio.model.RespostaAluno;
 import com.sas.desafio.model.tipos.TipoNivel;
 import com.sas.desafio.repository.QuestaoRepository;
-import com.sas.desafio.repository.RespostaAlunoRepository;
 import com.sas.desafio.service.QuestaoService;
 
 @RestController
@@ -33,10 +31,8 @@ public class QuestaoResource {
 	@Autowired
 	private QuestaoService questaoService;
 
-	@Autowired
-	private RespostaAlunoRepository respostaAlunoRepository;
-
 	@GetMapping
+	@ResponseStatus(code = HttpStatus.OK)
 	public List<Questao> listar(@RequestParam(required = false) String nivel,
 			@RequestParam(required = false) String area) {
 
@@ -48,15 +44,15 @@ public class QuestaoResource {
 	}
 
 	@GetMapping("/{id}")
+	@ResponseStatus(code = HttpStatus.OK)
 	public Questao buscaPorId(@PathVariable Long id) {
 		return questaoRepository.getById(id);
 	}
 
 	@PostMapping
-	public ResponseEntity<Questao> criar(@RequestBody Questao questao) {
-		Questao questaoSalva = questaoRepository.save(questao);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(questaoSalva);
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public Questao criar(@RequestBody Questao questao) {
+		return questaoRepository.save(questao);
 	}
 
 	@DeleteMapping("/{id}")
@@ -66,21 +62,15 @@ public class QuestaoResource {
 	}
 
 	@GetMapping("/proxima/{alunoId}")
-	public ResponseEntity<Object> buscaProximaQuestao(@PathVariable Long alunoId) {
-		ProximaQuestaoDTO proximaQuestao = questaoService.proximaQuestao(alunoId);
-
-		return ResponseEntity.status(HttpStatus.OK).body(proximaQuestao);
+	@ResponseStatus(code = HttpStatus.OK)
+	public ProximaQuestaoDTO buscaProximaQuestao(@PathVariable Long alunoId) {
+		return questaoService.proximaQuestao(alunoId);
 	}
 
 	@PostMapping("/responder")
 	@ResponseStatus(code = HttpStatus.OK)
 	public void responderQuestao(@RequestBody RespostaAluno respostaAluno) {
-		List<RespostaAluno> ra = respostaAlunoRepository.findAlreadyExist(respostaAluno.getAlunoId(),
-				respostaAluno.getSimuladoId(), respostaAluno.getProvaId(), respostaAluno.getQuestaoId());
-
-		respostaAlunoRepository.deleteAll(ra);
-
-		respostaAlunoRepository.save(respostaAluno);
+		questaoService.responderQuestao(respostaAluno);
 	}
 
 }

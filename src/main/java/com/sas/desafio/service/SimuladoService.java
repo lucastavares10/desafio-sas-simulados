@@ -88,9 +88,55 @@ public class SimuladoService {
 	public void encerraSimulado(Long id) {
 		Simulado simuladoSalvo = simuladoRepository.getById(id);
 		List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllBySimulado(simuladoSalvo.getId());
-		List<Nota> notasAlunos = new ArrayList<Nota>();
 
 		checkSimuladoStatus(simuladoSalvo);
+
+		notaRepository.saveAll(calculaNotaAlunos(simuladoSalvo, listaRespostas));
+
+		simuladoSalvo.setStatus(TipoSimuladoStatus.CONCLUIDO);
+		simuladoRepository.save(simuladoSalvo);
+	}
+
+	private void checkSimuladoStatus(Simulado simulado) {
+
+		if (simulado.getStatus() != TipoSimuladoStatus.EM_ANDAMENTO) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+					"Simulado não disponível! Status: " + simulado.getStatus());
+		}
+
+	}
+
+	private void checkSimulados(List<Long> requestIds, List<Prova> provasSalvas) {
+		List<Long> notContainsId = new ArrayList<Long>();
+
+		if (requestIds.size() <= 0) {
+			throw new NullPointerException("Por favor, insira os ids das provas que compõem o simulado! ");
+		}
+
+		for (int i = 0; i < requestIds.size(); i++) {
+			Boolean has = false;
+
+			for (int j = 0; j < provasSalvas.size(); j++) {
+				if (requestIds.get(i) == provasSalvas.get(j).getId()) {
+					has = true;
+				}
+			}
+
+			if (has == false) {
+				notContainsId.add(requestIds.get(i));
+			}
+
+		}
+
+		if (notContainsId.size() > 0) {
+			throw new EmptyResultDataAccessException("Provas não encontradas: " + notContainsId.toString(),
+					requestIds.size());
+		}
+
+	}
+
+	private List<Nota> calculaNotaAlunos(Simulado simuladoSalvo, List<RespostaAluno> listaRespostas) {
+		List<Nota> notasAlunos = new ArrayList<Nota>();
 
 		for (Aluno aluno : simuladoSalvo.getAlunos()) {
 			BigDecimal somaProvas = new BigDecimal(0);
@@ -140,47 +186,7 @@ public class SimuladoService {
 
 		}
 
-		notaRepository.saveAll(notasAlunos);
-
-		simuladoSalvo.setStatus(TipoSimuladoStatus.CONCLUIDO);
-		simuladoRepository.save(simuladoSalvo);
-	}
-
-	public void checkSimuladoStatus(Simulado simulado) {
-
-		if (simulado.getStatus() != TipoSimuladoStatus.EM_ANDAMENTO) {
-			throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
-					"Simulado não disponível! Status: " + simulado.getStatus());
-		}
-
-	}
-
-	public void checkSimulados(List<Long> requestIds, List<Prova> provasSalvas) {
-		List<Long> notContainsId = new ArrayList<Long>();
-
-		if (requestIds.size() <= 0) {
-			throw new NullPointerException("Por favor, insira os ids das provas que compõem o simulado! ");
-		}
-
-		for (int i = 0; i < requestIds.size(); i++) {
-			Boolean has = false;
-
-			for (int j = 0; j < provasSalvas.size(); j++) {
-				if (requestIds.get(i) == provasSalvas.get(j).getId()) {
-					has = true;
-				}
-			}
-
-			if (has == false) {
-				notContainsId.add(requestIds.get(i));
-			}
-
-		}
-
-		if (notContainsId.size() > 0) {
-			throw new EmptyResultDataAccessException("Provas não encontradas: " + notContainsId.toString(),
-					requestIds.size());
-		}
+		return notasAlunos;
 
 	}
 

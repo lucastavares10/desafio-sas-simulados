@@ -4,7 +4,6 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -25,20 +24,21 @@ public class AlunoResource {
 	private AlunoRepository alunoRepository;
 
 	@GetMapping
+	@ResponseStatus(code = HttpStatus.OK)
 	public List<Aluno> listar() {
 		return alunoRepository.findAll();
 	}
 
 	@GetMapping("/{id}")
+	@ResponseStatus(code = HttpStatus.OK)
 	public Aluno buscaPorId(@PathVariable Long id) {
 		return alunoRepository.getById(id);
 	}
 
 	@PostMapping
-	public ResponseEntity<Aluno> criar(@RequestBody Aluno aluno) {
-		Aluno alunoSalvo = alunoRepository.save(aluno);
-
-		return ResponseEntity.status(HttpStatus.CREATED).body(alunoSalvo);
+	@ResponseStatus(code = HttpStatus.CREATED)
+	public Aluno criar(@RequestBody Aluno aluno) {
+		return alunoRepository.save(aluno);
 	}
 
 	@DeleteMapping("/{id}")

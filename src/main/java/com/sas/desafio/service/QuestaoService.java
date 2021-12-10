@@ -11,6 +11,7 @@ import com.sas.desafio.model.Prova;
 import com.sas.desafio.model.Questao;
 import com.sas.desafio.model.RespostaAluno;
 import com.sas.desafio.model.Simulado;
+import com.sas.desafio.model.tipos.TipoSimuladoStatus;
 import com.sas.desafio.repository.AlunoRepository;
 import com.sas.desafio.repository.RespostaAlunoRepository;
 import com.sas.desafio.repository.SimuladoRepository;
@@ -27,21 +28,31 @@ public class QuestaoService {
 	@Autowired
 	SimuladoRepository simuladoRepository;
 
-	public ProximaQuestaoDTO proximaQuestao(Long alunoId) {
-		ProximaQuestaoDTO proximaQuestao = new ProximaQuestaoDTO();
-		List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllByAluno(alunoId);
+	public void responderQuestao(RespostaAluno respostaAluno) {
+		List<RespostaAluno> ra = respostaAlunoRepository.findAlreadyExist(respostaAluno.getAlunoId(),
+				respostaAluno.getSimuladoId(), respostaAluno.getProvaId(), respostaAluno.getQuestaoId());
 
-		List<Simulado> simulados = simuladoRepository.findAllbyAluno(alunoId);
+		respostaAlunoRepository.deleteAll(ra);
+		respostaAlunoRepository.save(respostaAluno);
+	}
+
+	public ProximaQuestaoDTO proximaQuestao(Long alunoId) {
+		List<RespostaAluno> listaRespostas = respostaAlunoRepository.findAllByAluno(alunoId);
+		List<Simulado> simulados = simuladoRepository.findAllbyAlunoAndStatus(alunoId, TipoSimuladoStatus.EM_ANDAMENTO);
 
 		if (simulados.size() <= 0) {
-			throw new EmptyResultDataAccessException("Aluno não está participando de nenhum simulado!", 1);
-
+			throw new EmptyResultDataAccessException("Não há simulados disponíveis para o aluno!", 1);
 		}
 
+		return searchProximaQuestao(alunoId, simulados, listaRespostas);
+	}
+
+	private ProximaQuestaoDTO searchProximaQuestao(Long alunoId, List<Simulado> simulados,
+			List<RespostaAluno> listaRespostas) {
+		ProximaQuestaoDTO proximaQuestao = new ProximaQuestaoDTO();
+
 		for (Simulado simulado : simulados) {
-
 			for (Prova prova : simulado.getProvas()) {
-
 				for (Questao questao : prova.getQuestoes()) {
 					Boolean solved = false;
 					for (RespostaAluno respostaAluno : listaRespostas) {
@@ -66,6 +77,7 @@ public class QuestaoService {
 		}
 
 		return proximaQuestao;
+
 	}
 
 }

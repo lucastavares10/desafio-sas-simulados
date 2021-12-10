@@ -18,14 +18,10 @@ public class Aluno {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	
-	private String nome;
-			
-	private String cpf;
 
-//	@ManyToMany
-//	@JoinTable(name = "aluno_simulado", joinColumns = @JoinColumn(name = "aluno_id"), inverseJoinColumns = @JoinColumn(name = "simulado_id"))
-//	private List<Simulado> simulados;
+	private String nome;
+
+	private String cpf;
 
 	@ManyToMany(mappedBy = "alunos")
 	@JsonBackReference
