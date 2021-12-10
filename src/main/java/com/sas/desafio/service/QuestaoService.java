@@ -4,7 +4,9 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import com.sas.desafio.dto.ProximaQuestaoDTO;
 import com.sas.desafio.model.Prova;
@@ -31,6 +33,10 @@ public class QuestaoService {
 	public void responderQuestao(RespostaAluno respostaAluno) {
 		List<RespostaAluno> ra = respostaAlunoRepository.findAlreadyExist(respostaAluno.getAlunoId(),
 				respostaAluno.getSimuladoId(), respostaAluno.getProvaId(), respostaAluno.getQuestaoId());
+		List<Simulado> simulados = simuladoRepository.findAllbyAlunoAndStatus(respostaAluno.getAlunoId(),
+				TipoSimuladoStatus.EM_ANDAMENTO);
+
+		checkRespostaValida(respostaAluno, simulados);
 
 		respostaAlunoRepository.deleteAll(ra);
 		respostaAlunoRepository.save(respostaAluno);
@@ -45,6 +51,27 @@ public class QuestaoService {
 		}
 
 		return searchProximaQuestao(alunoId, simulados, listaRespostas);
+	}
+
+	private void checkRespostaValida(RespostaAluno respostaAluno, List<Simulado> simulados) {
+		Boolean exists = false;
+
+		for (Simulado simulado : simulados) {
+			for (Prova prova : simulado.getProvas()) {
+				for (Questao questao : prova.getQuestoes()) {
+					if (simulado.getId() == respostaAluno.getSimuladoId() && prova.getId() == respostaAluno.getProvaId()
+							&& questao.getId() == respostaAluno.getQuestaoId()) {
+						exists = true;
+					}
+				}
+			}
+
+		}
+
+		if (exists == false) {
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Questão não disponível!");
+		}
+
 	}
 
 	private ProximaQuestaoDTO searchProximaQuestao(Long alunoId, List<Simulado> simulados,
