@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  desafio-api:
+    image: desafio-api:latest
+    ports:
+    - "8080:8080"
+    networks:
+      - commons-api
+    depends_on:
+      - postgresdb
+
+  postgresdb:
+    image: postgres:12
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: "postgres"
+      POSTGRES_USERNAME: "postgres"
+      POSTGRES_DB: "desafiosas"
+    ports:
+      - "5432:5432"
+    networks:
+      - commons-api
+
+
+networks:
+  commons-api:
+    driver: bridge

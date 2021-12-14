@@ -65,21 +65,36 @@ Following libraries were used during the development of this starter kit :
 
 **1. Clonar repositório**
 
-**2. Criar banco de dados PostgreSQL**
+**3. Build e start usando docker**
+
+```bash
+docker build -t desafio-api:latest .
+docker-compose up -d
+```
+
+**3. Usando maven**
+
++ Criar banco de dados PostgreSQL
+
 ```bash
 CREATE DATABASE desafiosas;
 ```
 
-**3. Configurar username e password do postgres no properties**
 
-+ Caminho: `src/main/resources/application.properties`
++ Configurar username, password e url do postgres no application.properties
 
-**4. Build e start usando maven**
+```bash
+src/main/resources/application.properties
+```
+
+
++ Build && start
 
 ```bash
 ./mvnw clean && ./mvnw package
 java -jar target/desafio-0.0.1-SNAPSHOT.jar
 ```
+
 
 Aplicação estará disponível em <http://localhost:8080>.
 
